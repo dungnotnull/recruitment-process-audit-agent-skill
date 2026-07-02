@@ -1,0 +1,7 @@
+# Normalize line endings to LF in the repository; working tree keeps original on Windows.
+* text=auto eol=lf
+
+# Binary
+*.png binary
+*.jpg binary
+*.ico binary

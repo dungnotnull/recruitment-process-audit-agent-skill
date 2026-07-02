@@ -1,0 +1,209 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://skills.local/recruitment-process-audit/scoring-schema.json",
+  "title": "Recruitment Process Audit - Scoring Output",
+  "description": "Standardized, machine-readable output schema for the recruitment-process-audit scoring engine and any sibling business-operations skill that reuses it. Every dimension MUST have a numeric score (0-100) and a one-line evidence/justification bound to a named framework. No dimension may be left unscored.",
+  "type": "object",
+  "required": ["schema_version", "skill", "generated_at", "artifact", "frameworks", "dimensions", "weighted_total", "band", "strengths", "weaknesses", "roadmap", "devils_advocate", "gates"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "1.0.0",
+      "description": "Schema version. Bump on breaking changes; reused sub-skills must reject unknown major versions."
+    },
+    "skill": {
+      "type": "string",
+      "const": "recruitment-process-audit",
+      "description": "Originating skill slug. Sibling skills reusing this schema keep their own slug here."
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO-8601 timestamp of generation."
+    },
+    "degraded_mode": {
+      "type": "boolean",
+      "default": false,
+      "description": "True when WebSearch/WebFetch were unavailable and the skill fell back to SECOND-KNOWLEDGE-BRAIN.md. When true, confidence must be lowered."
+    },
+    "confidence": {
+      "type": "string",
+      "enum": ["high", "medium", "low"],
+      "description": "Overall confidence in the assessment. Forced to 'low' when degraded_mode is true."
+    },
+    "artifact": {
+      "type": "object",
+      "description": "Reference to the artifact under review.",
+      "required": ["title", "version"],
+      "properties": {
+        "title": { "type": "string" },
+        "version": { "type": "string" },
+        "baseline_version": { "type": "string", "description": "Prior baseline version for benchmark/improvement-loop runs." },
+        "deltas": {
+          "type": "array",
+          "description": "Per-dimension before/after deltas, populated only on benchmark runs.",
+          "items": {
+            "type": "object",
+            "required": ["dimension", "before", "after", "delta"],
+            "properties": {
+              "dimension": { "type": "string" },
+              "before": { "type": "number", "minimum": 0, "maximum": 100 },
+              "after": { "type": "number", "minimum": 0, "maximum": 100 },
+              "delta": { "type": "number" }
+            }
+          }
+        }
+      }
+    },
+    "frameworks": {
+      "type": "array",
+      "minItems": 1,
+      "description": "Named, citable frameworks the assessment is bound to. At least one is required by the quality gate.",
+      "items": {
+        "type": "object",
+        "required": ["name", "citation"],
+        "properties": {
+          "name": { "type": "string" },
+          "citation": { "type": "string", "description": "DOI/URL or full reference." }
+        }
+      }
+    },
+    "dimensions": {
+      "type": "array",
+      "minItems": 8,
+      "description": "One entry per scoring dimension. The eight canonical dimensions are required; additional dimensions are permitted for sibling skills.",
+      "items": {
+        "type": "object",
+        "required": ["name", "score", "evidence", "framework"],
+        "additionalProperties": false,
+        "properties": {
+          "name": { "type": "string", "description": "Dimension name (e.g. 'Job-analysis grounding')." },
+          "score": { "type": "number", "minimum": 0, "maximum": 100 },
+          "evidence": { "type": "string", "minLength": 1, "description": "One-line evidence/justification. Never empty." },
+          "framework": { "type": "string", "description": "Named framework bound to this score." },
+          "weight": { "type": "number", "minimum": 0, "maximum": 1, "description": "Relative weight used in weighted_total (defaults to 0.125 = 1/8)." },
+          "findings": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["type", "text"],
+              "properties": {
+                "type": { "type": "string", "enum": ["strength", "weakness"] },
+                "text": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "weighted_total": { "type": "number", "minimum": 0, "maximum": 100 },
+    "band": {
+      "type": "string",
+      "enum": ["critical", "developing", "established", "leading"],
+      "description": "Band derived from weighted_total: 0-39 critical, 40-59 developing, 60-79 established, 80-100 leading."
+    },
+    "strengths": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "weaknesses": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["dimension", "text", "rank"],
+        "properties": {
+          "dimension": { "type": "string" },
+          "text": { "type": "string" },
+          "rank": { "type": "integer", "minimum": 1, "description": "1 = highest-leverage weakness." }
+        }
+      }
+    },
+    "roadmap": {
+      "type": "array",
+      "description": "Prioritized improvement roadmap. Every item MUST have effort, impact, and a measurable success metric (quality gate).",
+      "items": {
+        "type": "object",
+        "required": ["title", "tier", "effort", "impact", "success_metric", "owner"],
+        "additionalProperties": false,
+        "properties": {
+          "title": { "type": "string" },
+          "tier": { "type": "string", "enum": ["quick-win", "major-project", "long-term"] },
+          "effort": { "type": "string", "enum": ["low", "medium", "high"] },
+          "impact": { "type": "string", "enum": ["low", "medium", "high"] },
+          "success_metric": { "type": "string", "minLength": 1, "description": "Measurable success metric (e.g. 'four-fifths ratio >= 0.80 within 2 cycles')." },
+          "owner": { "type": "string", "description": "Stakeholder accountable for delivery (from sub-stakeholder-mapper)." },
+          "target_dimension": { "type": "string", "description": "Dimension the item primarily improves." }
+        }
+      }
+    },
+    "stakeholders": {
+      "type": "array",
+      "description": "Stakeholder matrix from sub-stakeholder-mapper (interest x influence).",
+      "items": {
+        "type": "object",
+        "required": ["name", "role", "interest", "influence", "success_metric"],
+        "properties": {
+          "name": { "type": "string" },
+          "role": { "type": "string" },
+          "interest": { "type": "integer", "minimum": 1, "maximum": 5 },
+          "influence": { "type": "integer", "minimum": 1, "maximum": 5 },
+          "success_metric": { "type": "string" },
+          "likely_objections": { "type": "string" }
+        }
+      }
+    },
+    "bias_findings": {
+      "type": "array",
+      "description": "Bias-risk findings per process stage from sub-bias-screener. Each stage MUST have at least one bias vector with a concrete mitigation.",
+      "items": {
+        "type": "object",
+        "required": ["stage", "bias_vector", "severity", "mitigation"],
+        "properties": {
+          "stage": { "type": "string", "enum": ["sourcing", "screening", "interview", "decision"] },
+          "bias_vector": { "type": "string" },
+          "severity": { "type": "string", "enum": ["low", "medium", "high"] },
+          "mitigation": { "type": "string" },
+          "adverse_impact_flag": { "type": "boolean" }
+        }
+      }
+    },
+    "devils_advocate": {
+      "type": "object",
+      "required": ["challenged", "outcome"],
+      "properties": {
+        "challenged": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["claim", "challenge", "resolution"],
+            "properties": {
+              "claim": { "type": "string" },
+              "challenge": { "type": "string" },
+              "resolution": { "type": "string" }
+            }
+          }
+        },
+        "outcome": { "type": "string", "enum": ["passed", "revised", "failed"] }
+      }
+    },
+    "gates": {
+      "type": "object",
+      "description": "Final quality-gate checklist. All must be true before output is presented.",
+      "required": ["every_dimension_scored_with_evidence", "at_least_one_framework_cited", "roadmap_items_measurable", "devils_advocate_passed", "no_silent_assumptions"],
+      "additionalProperties": false,
+      "properties": {
+        "every_dimension_scored_with_evidence": { "type": "boolean" },
+        "at_least_one_framework_cited": { "type": "boolean" },
+        "roadmap_items_measurable": { "type": "boolean" },
+        "devils_advocate_passed": { "type": "boolean" },
+        "no_silent_assumptions": { "type": "boolean" }
+      }
+    },
+    "sources": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "All frameworks and external sources cited, mirroring the markdown 'Sources & Frameworks Cited' section."
+    }
+  }
+}

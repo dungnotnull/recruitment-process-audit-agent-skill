@@ -1,0 +1,81 @@
+{
+  "schema_version": "1.0.0",
+  "skill": "recruitment-process-audit",
+  "generated_at": "2026-07-02T08:00:00Z",
+  "degraded_mode": false,
+  "confidence": "high",
+  "artifact": {
+    "title": "Internal Engineering Hiring Process v2",
+    "version": "2.0",
+    "baseline_version": "1.0"
+  },
+  "frameworks": [
+    {"name": "Structured interview validity (Schmidt & Hunter meta-analysis)", "citation": "https://doi.org/10.1037/0033-2909.124.2.262"},
+    {"name": "Adverse-impact / four-fifths rule (Uniform Guidelines, 29 CFR 1607)", "citation": "https://www.eeoc.gov/laws/guidelines/uniform-guidelines-employee-selection-procedures-1978"},
+    {"name": "Competency-based selection frameworks", "citation": "Barrick & Mount (1991), Personnel Psychology"},
+    {"name": "Blind/anonymized screening practices", "citation": "Bohnet (2016), What Works: Gender Equality by Design"},
+    {"name": "Candidate-experience (NPS) measurement", "citation": "Hausknecht, Day & Thomas (2004), Personnel Psychology"}
+  ],
+  "dimensions": [
+    {"name": "Job-analysis grounding", "score": 82, "evidence": "Job tasks derived from a documented job analysis with SME sign-off.", "framework": "Competency-based selection frameworks", "weight": 0.125, "findings": [{"type": "strength", "text": "SME-validated competency model"}, {"type": "weakness", "text": "Job analysis not refreshed in 18 months"}]},
+    {"name": "Sourcing reach & diversity", "score": 61, "evidence": "Three channels used; no outreach to women-in-tech communities; applicant pool skew flagged.", "framework": "Blind/anonymized screening practices", "weight": 0.125, "findings": [{"type": "weakness", "text": "Narrow sourcing channels"}]},
+    {"name": "Screening validity", "score": 55, "evidence": "Unstructured resume keyword filter; no validated predictor weighting.", "framework": "Structured interview validity (Schmidt & Hunter meta-analysis)", "weight": 0.125, "findings": [{"type": "weakness", "text": "No predictor validity evidence"}]},
+    {"name": "Interview structure", "score": 74, "evidence": "Behaviorally-anchored questions used; two interviewers; scoring rubric present.", "framework": "Structured interview validity (Schmidt & Hunter meta-analysis)", "weight": 0.125, "findings": [{"type": "strength", "text": "Structured behavioral questions"}]},
+    {"name": "Bias-mitigation controls", "score": 48, "evidence": "No blind screening; interviewer demographic skew; no calibration.", "framework": "Blind/anonymized screening practices", "weight": 0.125, "findings": [{"type": "weakness", "text": "Resumes not anonymized"}]},
+    {"name": "Adverse-impact monitoring", "score": 39, "evidence": "No four-fifths analysis run; selection rates by group not tracked.", "framework": "Adverse-impact / four-fifths rule (Uniform Guidelines, 29 CFR 1607)", "weight": 0.125, "findings": [{"type": "weakness", "text": "Adverse-impact unmeasured"}]},
+    {"name": "Candidate experience", "score": 70, "evidence": "NPS survey sent post-decision; response rate 28%; no closing of loop.", "framework": "Candidate-experience (NPS) measurement", "weight": 0.125, "findings": [{"type": "weakness", "text": "No feedback loop to candidates"}]},
+    {"name": "Decision consistency", "score": 66, "evidence": "Hiring rubric exists but interviewers apply it inconsistently; IRR not measured.", "framework": "Structured interview validity (Schmidt & Hunter meta-analysis)", "weight": 0.125, "findings": [{"type": "weakness", "text": "Low inter-rater reliability"}]}
+  ],
+  "weighted_total": 61.9,
+  "band": "established",
+  "strengths": [
+    "Documented, SME-validated job analysis grounding",
+    "Structured, behaviorally-anchored interview questions"
+  ],
+  "weaknesses": [
+    {"dimension": "Adverse-impact monitoring", "text": "No four-fifths analysis; disparate-impact exposure unmeasured.", "rank": 1},
+    {"dimension": "Bias-mitigation controls", "text": "No blind/anonymized screening; interviewer demographic skew unmitigated.", "rank": 2},
+    {"dimension": "Screening validity", "text": "Unstructured keyword resume filter with no predictor validity evidence.", "rank": 3}
+  ],
+  "roadmap": [
+    {"title": "Run four-fifths analysis on last 4 hiring cycles", "tier": "quick-win", "effort": "low", "impact": "high", "success_metric": "Four-fifths ratio >= 0.80 for every protected group within 2 cycles", "owner": "Talent Analytics Lead", "target_dimension": "Adverse-impact monitoring"},
+    {"title": "Anonymize resumes (name, school, photo removal) pre-screen", "tier": "quick-win", "effort": "medium", "impact": "high", "success_metric": "100% of resumes screened blind; demographic-cue detection audit passes", "owner": "Recruiting Ops", "target_dimension": "Bias-mitigation controls"},
+    {"title": "Replace keyword filter with validated, job-related screening rubric", "tier": "major-project", "effort": "medium", "impact": "high", "success_metric": "Predictor validity r >= 0.30 vs. on-the-job performance within 1 cycle", "owner": "Hiring Managers", "target_dimension": "Screening validity"},
+    {"title": "Expand sourcing to women-in-tech and HBCU partnerships", "tier": "major-project", "effort": "medium", "impact": "medium", "success_metric": "Underrepresented applicants >= 35% of funnel within 2 cycles", "owner": "Sourcing Lead", "target_dimension": "Sourcing reach & diversity"},
+    {"title": "Interviewer calibration + inter-rater reliability tracking", "tier": "long-term", "effort": "high", "impact": "medium", "success_metric": "Inter-rater reliability (ICC) >= 0.70 across calibrated interviewers", "owner": "Talent Acquisition Director", "target_dimension": "Decision consistency"}
+  ],
+  "stakeholders": [
+    {"name": "Talent Acquisition Director", "role": "approver", "interest": 5, "influence": 5, "success_metric": "Hire quality + fairness KPIs", "likely_objections": "Cost of calibration time"},
+    {"name": "Hiring Managers", "role": "executor", "interest": 4, "influence": 4, "success_metric": "Validated, on-time hires", "likely_objections": "Process overhead"},
+    {"name": "Candidates", "role": "affected", "interest": 4, "influence": 2, "success_metric": "Fair, respectful experience (NPS)", "likely_objections": "Opaque decisions"},
+    {"name": "Legal/Compliance", "role": "approver", "interest": 4, "influence": 4, "success_metric": "Regulatory compliance (four-fifths)", "likely_objections": "Adverse-impact risk"},
+    {"name": "DEI Office", "role": "affected", "interest": 5, "influence": 3, "success_metric": "Equitable representation", "likely_objections": "Slow progress"}
+  ],
+  "bias_findings": [
+    {"stage": "sourcing", "bias_vector": "Channel homophily - referrals dominate funnel", "severity": "high", "mitigation": "Cap referrals at 30%; add structured outreach to underrepresented communities", "adverse_impact_flag": true},
+    {"stage": "screening", "bias_vector": "Affinity-based resume keywords; demographic cues visible", "severity": "high", "mitigation": "Anonymize resumes; use validated, job-related screening rubric", "adverse_impact_flag": true},
+    {"stage": "interview", "bias_vector": "Untrained interviewers; no calibration; like-me bias", "severity": "medium", "mitigation": "Structured questions, scoring rubric, calibration sessions, diverse panels", "adverse_impact_flag": false},
+    {"stage": "decision", "bias_vector": "Unstructured debrief; halo effects from dominant interviewer", "severity": "medium", "mitigation": "Independent scoring before discussion; blind aggregation of scores", "adverse_impact_flag": false}
+  ],
+  "devils_advocate": {
+    "challenged": [
+      {"claim": "Blind screening will fully remove bias", "challenge": "Bias re-enters at interview/decision stages", "resolution": "Pair blind screening with structured interviews and calibrated debriefs"},
+      {"claim": "Weighted total of 61.9 = 'established'", "challenge": "Adverse-impact score (39) is critical and masks regulatory risk", "resolution": "Flag adverse-impact as a gating weakness regardless of total; require remediation before 'established' claim"}
+    ],
+    "outcome": "revised"
+  },
+  "gates": {
+    "every_dimension_scored_with_evidence": true,
+    "at_least_one_framework_cited": true,
+    "roadmap_items_measurable": true,
+    "devils_advocate_passed": true,
+    "no_silent_assumptions": true
+  },
+  "sources": [
+    "Schmidt & Hunter (1998), Psychological Bulletin - https://doi.org/10.1037/0033-2909.124.2.262",
+    "Uniform Guidelines on Employee Selection Procedures (29 CFR 1607) - https://www.eeoc.gov",
+    "Levashina et al. (2014), Personnel Psychology - https://doi.org/10.1111/peps.12109",
+    "Bohnet (2016), What Works: Gender Equality by Design",
+    "Hausknecht, Day & Thomas (2004), Personnel Psychology - https://doi.org/10.1111/j.1744-6570.2004.tb00483.x"
+  ]
+}
